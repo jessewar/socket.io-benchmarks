@@ -16,7 +16,7 @@ if (process.argv[2] == '1.0.0') {
   io.configure(function () {
     var transport = process.argv.length >= 3 ? process.argv[3] : null;
     if (transport) io.set('transports', [transport]);
-    io.set('log level', 3);
+    io.set('log level', 1);
   });
   version = "0.9.16";
 }
