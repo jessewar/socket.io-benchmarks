@@ -1,23 +1,26 @@
 var server = require('http').Server();
-var ioc = require('socket.io-client');
 var Benchmark = require('benchmark');
+var ioc;
 var io;
 
 var version;
-if (process.argv[2] == 'new') {
+if (process.argv[2] == '1.0.0') {
+    ioc = require('./node_modules/socket-new/socket.io-client');
     io = require('./node_modules/socket-new/socket.io')(server, {
-        transports : [process.argv[3]]
+        transports : ['polling', process.argv[3]]  // need polling for initial transport
     });
     version = "1.0.0";
 } else {
+    ioc = require('socket.io-client');
     io = require('./node_modules/socket-old/socket.io').listen(server);
     io.configure(function() {
-	var transport = process.argv.length >= 3 ? process.argv[3] : null;
-	if (transport) io.set('transports', [transport]);
-	io.set('log level', 1);
+        var transport = process.argv.length >= 3 ? process.argv[3] : null;
+        if (transport) io.set('transports', [transport]);
+        io.set('log level', 1);
     });
     version = "0.9.16";
 }
+
 // creates a socket.io client for the given server
 function client(srv, nsp, opts) {
     if ('object' == typeof nsp) {
@@ -32,6 +35,8 @@ function client(srv, nsp, opts) {
 
 
 io.sockets.on('connection', function(socket) {
+    debugger;
+
     function jsonRoundtrip(deferred) {
         socket.emit('server-message', {name : "Server"});
         socket.on('client-message', function(data) {
@@ -41,12 +46,10 @@ io.sockets.on('connection', function(socket) {
     }
 
     var options = {
-        onStart : function() { console.log("Testing SocketIO v" + version + "  using " + process.argv[3] + "..."); },
+        onStart : function() { console.log("Testing SocketIO v" + version + " using " + process.argv[3] + "..."); },
         onComplete : function() {
-            console.log("Number of times test was executed: " + this.count + "\n" +
-                        "Numer of test cycles: " + this.cycles + "\n" +
-                        "Mean execution time: " + this.stats.mean + "\n" +
-                        "Numer of executions per second: " + this.hz);
+            console.log("Mean time for JSON message from server to client back to server: " + this.stats.mean + "\n" +
+                        "Number of trips per second: " + this.hz);
         },
         defer : true,
         async : true
