@@ -10,7 +10,7 @@ if (process.argv[2] == '1.0.0') {
     transports: ['polling', process.argv[3]] // need polling for initial transport
   });
   version = "1.0.0";
-} else { // version 0.9.16
+} else if (process.argv[2] == '0.9.16') {
   ioc = require('socket.io-client');
   io = require('socket.io').listen(server);
   io.configure(function () {
@@ -19,6 +19,12 @@ if (process.argv[2] == '1.0.0') {
     io.set('log level', 1);
   });
   version = "0.9.16";
+} else {
+  console.log("Usage ./bench.js version transport");
+  console.log("Where:");
+  console.log("  'version' is the version of socket.io and socket.io-client to test (either 0.9.16 or 1.0.0)");
+  console.log("  'transport' is the specific transport socket.io will be limited to");
+  process.exit(1);
 }
 
 // creates a socket.io client for the given server
@@ -52,6 +58,7 @@ io.sockets.on('connection', function (socket) {
     onComplete: function () {
       console.log("Mean time for JSON message from server to client back to server: " + this.stats.mean + "\n" +
                   "Number of trips per second: " + this.hz);
+      process.exit();
     },
     defer: true,
     async: true
