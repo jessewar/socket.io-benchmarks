@@ -1,0 +1,23 @@
+{
+  "name": "socket.io-benchmarks",
+  "version": "0.0.0",
+  "description": "benchmarks for socket.io and socket.io-client v0.9.16 and v1.0.0-pre2",
+  "main": "bench.js",
+  "dependencies": {
+    "socket-benchmarks-v0.9.16" : "git://github.com/jessewar/socket-benchmarks-v0.9.16",
+    "socket-benchmarks-v1.0.0" : "git://github.com/jessewar/socket-benchmarks-v1.0.0-pre2"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/jessewar/socket.io-benchmarks.git"
+  },
+  "author": "",
+  "bugs": {
+    "url": "https://github.com/jessewar/socket.io-benchmarks/issues"
+  },
+  "homepage": "https://github.com/jessewar/socket.io-benchmarks"
+}
